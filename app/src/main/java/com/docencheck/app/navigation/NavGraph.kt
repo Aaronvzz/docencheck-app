@@ -2,6 +2,7 @@ package com.docencheck.app.navigation
 
 object Routes {
     const val LOGIN              = "login"
+    const val REGISTER           = "register"
     const val GESTION_DOCENTES   = "gestion_docentes"
     const val ENROLAMIENTO       = "enrolamiento_facial"
     const val REGISTRAR_ASISTENCIA = "registrar_asistencia"
