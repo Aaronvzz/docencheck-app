@@ -1,5 +1,6 @@
 package com.docencheck.app.ui.screens
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,6 +23,7 @@ data class RegistroAsistencia(
     val hora: String
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConsultaAsistenciasScreen(onBack: () -> Unit = {}) {
     var docenteFiltro by remember { mutableStateOf("--seleccionar--") }

@@ -1,5 +1,6 @@
 package com.docencheck.app.ui.screens
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.docencheck.app.ui.components.DocenCheckTopBar
 import com.docencheck.app.ui.theme.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EnrolamientoFacialScreen(onBack: () -> Unit = {}) {
     var docenteSeleccionado by remember { mutableStateOf("--seleccionar--") }
