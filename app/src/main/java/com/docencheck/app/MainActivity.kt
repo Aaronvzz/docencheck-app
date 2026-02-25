@@ -41,22 +41,6 @@ fun DocenCheckApp() {
                             popUpTo(Routes.LOGIN) { inclusive = true }
                         }
                     }
-                },
-                onNavigateToRegister = {
-                    navController.navigate(Routes.REGISTER)
-                }
-            )
-        }
-
-        composable(Routes.REGISTER) {
-            RegisterScreen(
-                onRegisterSuccess = {
-                    navController.navigate(Routes.LOGIN) {
-                        popUpTo(Routes.REGISTER) { inclusive = true }
-                    }
-                },
-                onNavigateToLogin = {
-                    navController.navigateUp()
                 }
             )
         }

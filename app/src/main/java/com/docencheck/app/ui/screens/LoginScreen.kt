@@ -1,8 +1,6 @@
 package com.docencheck.app.ui.screens
 
-import android.util.Patterns
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -13,25 +11,21 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.docencheck.app.ui.theme.*
 
 @Composable
 fun LoginScreen(
-    onLoginSuccess: (role: String) -> Unit = {},
-    onNavigateToRegister: () -> Unit = {}
+    onLoginSuccess: (role: String) -> Unit = {}
 ) {
-    var correo by remember { mutableStateOf("") }
+    var userId by remember { mutableStateOf("") }
     var contrasena by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    var errorCorreo by remember { mutableStateOf("") }
+    var errorUserId by remember { mutableStateOf("") }
     var errorContrasena by remember { mutableStateOf("") }
     var errorGeneral by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
@@ -70,23 +64,23 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Campo Correo Electrónico
+        // Campo ID de Usuario
         Column(modifier = Modifier.padding(horizontal = 24.dp).fillMaxWidth()) {
             Text(
-                text = "Correo Electrónico",
+                text = "ID de Usuario",
                 style = MaterialTheme.typography.bodyLarge,
                 color = TextDark
             )
             Spacer(modifier = Modifier.height(6.dp))
             OutlinedTextField(
-                value = correo,
-                onValueChange = { correo = it; errorCorreo = ""; errorGeneral = "" },
+                value = userId,
+                onValueChange = { userId = it; errorUserId = ""; errorGeneral = "" },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("ejemplo@correo.com", color = TextMedium) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                isError = errorCorreo.isNotEmpty(),
-                supportingText = if (errorCorreo.isNotEmpty()) {
-                    { Text(errorCorreo, color = ErrorRed) }
+                placeholder = { Text("Ingrese su ID de usuario", color = TextMedium) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                isError = errorUserId.isNotEmpty(),
+                supportingText = if (errorUserId.isNotEmpty()) {
+                    { Text(errorUserId, color = ErrorRed) }
                 } else null,
                 shape = RoundedCornerShape(8.dp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -138,7 +132,7 @@ fun LoginScreen(
             )
         }
 
-        // Error general
+        // Error general (credenciales inválidas)
         if (errorGeneral.isNotEmpty()) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -155,8 +149,8 @@ fun LoginScreen(
         Button(
             onClick = {
                 var valid = true
-                if (correo.isBlank()) {
-                    errorCorreo = "El campo correo es requerido"
+                if (userId.isBlank()) {
+                    errorUserId = "El campo ID de usuario es requerido"
                     valid = false
                 }
                 if (contrasena.isBlank()) {
@@ -166,19 +160,13 @@ fun LoginScreen(
                 if (valid) {
                     isLoading = true
                     // Bypass de pruebas: admin / admin123
-                    if (correo == "admin" && contrasena == "admin123") {
+                    if (userId == "admin" && contrasena == "admin123") {
                         isLoading = false
                         onLoginSuccess("ADMINISTRADOR")
                     } else {
-                        // Validar formato de correo
-                        if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
-                            errorCorreo = "Ingrese un correo electrónico válido"
-                            isLoading = false
-                        } else {
-                            // TODO: llamar a la API de autenticación
-                            errorGeneral = "Credenciales inválidas. Verifique su correo y contraseña."
-                            isLoading = false
-                        }
+                        // TODO: llamar a la API de autenticación
+                        errorGeneral = "Credenciales inválidas. Verifique su ID y contraseña."
+                        isLoading = false
                     }
                 }
             },
@@ -199,21 +187,5 @@ fun LoginScreen(
                 Text("Iniciar Sesión", style = MaterialTheme.typography.labelMedium, color = BackgroundWhite)
             }
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Enlace de Registro
-        Text(
-            text = buildAnnotatedString {
-                withStyle(SpanStyle(color = TextMedium)) {
-                    append("¿No tienes cuenta? ")
-                }
-                withStyle(SpanStyle(color = PrimaryDarkBlue)) {
-                    append("Regístrate aquí")
-                }
-            },
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.clickable { onNavigateToRegister() }
-        )
     }
 }
