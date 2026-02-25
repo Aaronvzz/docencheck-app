@@ -3,6 +3,8 @@ package com.docencheck.app.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ListAlt
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -29,7 +31,7 @@ private val adminDrawerItems = listOf(
     DrawerItem(Routes.GESTION_DOCENTES,    "Gestión de Docentes",     Icons.Default.People),
     DrawerItem(Routes.ENROLAMIENTO,        "Enrolamiento Facial",     Icons.Default.Face),
     DrawerItem(Routes.GESTION_OPERADORES,  "Gestión de Operadores",   Icons.Default.ManageAccounts),
-    DrawerItem(Routes.CONSULTA_ASISTENCIAS,"Consulta de Asistencias", Icons.Default.ListAlt),
+    DrawerItem(Routes.CONSULTA_ASISTENCIAS,"Consulta de Asistencias", Icons.AutoMirrored.Filled.ListAlt),
     DrawerItem(Routes.GENERACION_REPORTES, "Generación de Reportes",  Icons.Default.BarChart),
 )
 
@@ -143,7 +145,7 @@ private fun AdminDrawerContent(
         NavigationDrawerItem(
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Logout,
+                    imageVector = Icons.AutoMirrored.Filled.Logout,
                     contentDescription = null,
                     tint = ErrorRed
                 )
