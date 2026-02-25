@@ -69,7 +69,7 @@ fun ConsultaAsistenciasScreen(onBack: () -> Unit = {}) {
                         OutlinedTextField(
                             value = docenteFiltro, onValueChange = {}, readOnly = true,
                             trailingIcon = { Icon(Icons.Default.ArrowDropDown, null) },
-                            modifier = Modifier.fillMaxWidth().menuAnchor(),
+                            modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryNotEditable),
                             shape = RoundedCornerShape(8.dp)
                         )
                         ExposedDropdownMenu(expanded = docenteExpanded, onDismissRequest = { docenteExpanded = false }) {
@@ -96,7 +96,7 @@ fun ConsultaAsistenciasScreen(onBack: () -> Unit = {}) {
                                 OutlinedTextField(
                                     value = paseFiltro, onValueChange = {}, readOnly = true,
                                     trailingIcon = { Icon(Icons.Default.ArrowDropDown, null) },
-                                    modifier = Modifier.fillMaxWidth().menuAnchor(),
+                                    modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryNotEditable),
                                     shape = RoundedCornerShape(8.dp)
                                 )
                                 ExposedDropdownMenu(expanded = paseExpanded, onDismissRequest = { paseExpanded = false }) {

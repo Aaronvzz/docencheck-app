@@ -75,7 +75,7 @@ fun GeneracionReportesScreen(onBack: () -> Unit = {}) {
                         OutlinedTextField(
                             value = docenteSeleccionado, onValueChange = {}, readOnly = true,
                             trailingIcon = { Icon(Icons.Default.ArrowDropDown, null) },
-                            modifier = Modifier.fillMaxWidth().menuAnchor(),
+                            modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryNotEditable),
                             shape = RoundedCornerShape(8.dp)
                         )
                         ExposedDropdownMenu(expanded = dropdownExpanded, onDismissRequest = { dropdownExpanded = false }) {

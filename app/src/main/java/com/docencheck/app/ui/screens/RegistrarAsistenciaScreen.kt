@@ -57,7 +57,7 @@ fun RegistrarAsistenciaScreen(onBack: () -> Unit = {}) {
                     trailingIcon = {
                         Icon(Icons.Default.ArrowDropDown, contentDescription = null, tint = TextDark)
                     },
-                    modifier = Modifier.fillMaxWidth().menuAnchor(),
+                    modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryNotEditable),
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedContainerColor = SurfaceGray,
