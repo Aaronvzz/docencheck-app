@@ -83,6 +83,7 @@ private fun AdminDrawerContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(PrimaryDarkBlue)
+                .statusBarsPadding()
                 .padding(vertical = 36.dp, horizontal = 20.dp)
         ) {
             Column {

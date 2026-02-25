@@ -1,5 +1,6 @@
 package com.docencheck.app.ui.screens
 
+import android.util.Patterns
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -13,15 +14,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.docencheck.app.ui.theme.*
 import java.util.UUID
+
+// Solo letras (incluyendo acentos y ñ) y espacios
+private val NAME_REGEX = Regex("^[a-zA-ZáéíóúüÁÉÍÓÚÜñÑ ]+$")
 
 @Composable
 fun RegisterScreen(
@@ -31,6 +33,7 @@ fun RegisterScreen(
     var nombres by remember { mutableStateOf("") }
     var apellidoPaterno by remember { mutableStateOf("") }
     var apellidoMaterno by remember { mutableStateOf("") }
+    var correo by remember { mutableStateOf("") }
     var contrasena by remember { mutableStateOf("") }
     var confirmarContrasena by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -39,12 +42,11 @@ fun RegisterScreen(
     var errorNombres by remember { mutableStateOf("") }
     var errorApellidoPaterno by remember { mutableStateOf("") }
     var errorApellidoMaterno by remember { mutableStateOf("") }
+    var errorCorreo by remember { mutableStateOf("") }
     var errorContrasena by remember { mutableStateOf("") }
     var errorConfirmarContrasena by remember { mutableStateOf("") }
 
     var isLoading by remember { mutableStateOf(false) }
-    var idGenerado by remember { mutableStateOf("") }
-    var showSuccessDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -53,11 +55,12 @@ fun RegisterScreen(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Header
+        // Header — azul se extiende detrás de la status bar
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(PrimaryDarkBlue)
+                .statusBarsPadding()
                 .padding(vertical = 28.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -88,7 +91,6 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Campo Nombres
         RegisterField(
             label = "Nombres",
             value = nombres,
@@ -99,7 +101,6 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Campo Apellido Paterno
         RegisterField(
             label = "Apellido Paterno",
             value = apellidoPaterno,
@@ -110,7 +111,6 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Campo Apellido Materno
         RegisterField(
             label = "Apellido Materno",
             value = apellidoMaterno,
@@ -121,7 +121,17 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Campo Crear Contraseña
+        RegisterField(
+            label = "Correo Electrónico",
+            value = correo,
+            onValueChange = { correo = it; errorCorreo = "" },
+            placeholder = "ejemplo@correo.com",
+            error = errorCorreo,
+            keyboardType = KeyboardType.Email
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
         PasswordField(
             label = "Crear contraseña",
             value = contrasena,
@@ -134,7 +144,6 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Campo Confirmar Contraseña
         PasswordField(
             label = "Confirmar contraseña",
             value = confirmarContrasena,
@@ -147,7 +156,6 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Botón Registrarse
         Button(
             onClick = {
                 var valid = true
@@ -155,13 +163,29 @@ fun RegisterScreen(
                 if (nombres.isBlank()) {
                     errorNombres = "El campo nombres es requerido"
                     valid = false
+                } else if (!NAME_REGEX.matches(nombres.trim())) {
+                    errorNombres = "Solo se permiten letras y espacios"
+                    valid = false
                 }
                 if (apellidoPaterno.isBlank()) {
                     errorApellidoPaterno = "El apellido paterno es requerido"
                     valid = false
+                } else if (!NAME_REGEX.matches(apellidoPaterno.trim())) {
+                    errorApellidoPaterno = "Solo se permiten letras y espacios"
+                    valid = false
                 }
                 if (apellidoMaterno.isBlank()) {
                     errorApellidoMaterno = "El apellido materno es requerido"
+                    valid = false
+                } else if (!NAME_REGEX.matches(apellidoMaterno.trim())) {
+                    errorApellidoMaterno = "Solo se permiten letras y espacios"
+                    valid = false
+                }
+                if (correo.isBlank()) {
+                    errorCorreo = "El correo electrónico es requerido"
+                    valid = false
+                } else if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
+                    errorCorreo = "Ingrese un correo electrónico válido"
                     valid = false
                 }
                 if (contrasena.isBlank()) {
@@ -181,15 +205,11 @@ fun RegisterScreen(
 
                 if (valid) {
                     isLoading = true
-                    // Generar ID único formato PROF-XXXX
-                    val suffix = UUID.randomUUID().toString()
-                        .replace("-", "")
-                        .take(4)
-                        .uppercase()
-                    idGenerado = "PROF-$suffix"
-                    // TODO: Enviar datos al backend (nombre, apellidos, contraseña, id generado)
+                    // Token interno para el backend — no se muestra al usuario
+                    val internalToken = UUID.randomUUID().toString()
+                    // TODO: Enviar al backend (nombres, apellidos, correo, internalToken)
                     isLoading = false
-                    showSuccessDialog = true
+                    onRegisterSuccess()
                 }
             },
             modifier = Modifier
@@ -218,70 +238,6 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
     }
-
-    // Diálogo de registro exitoso con ID generado
-    if (showSuccessDialog) {
-        AlertDialog(
-            onDismissRequest = {},
-            title = {
-                Text(
-                    text = "¡Registro Exitoso!",
-                    color = PrimaryDarkBlue,
-                    fontWeight = FontWeight.Bold
-                )
-            },
-            text = {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = "Tu cuenta ha sido creada correctamente.",
-                        color = TextDark,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = "Tu ID único es:",
-                        color = TextMedium,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(SurfaceGray, RoundedCornerShape(8.dp))
-                            .padding(vertical = 12.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = idGenerado,
-                            color = PrimaryDarkBlue,
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 2.sp
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = "⚠ Guarda este ID, lo necesitarás para iniciar sesión.",
-                        color = ErrorRed,
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        showSuccessDialog = false
-                        onRegisterSuccess()
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = PrimaryDarkBlue)
-                ) {
-                    Text("Entendido, ir al Login", color = BackgroundWhite)
-                }
-            },
-            containerColor = BackgroundWhite
-        )
-    }
 }
 
 @Composable
@@ -290,7 +246,8 @@ private fun RegisterField(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
-    error: String
+    error: String,
+    keyboardType: KeyboardType = KeyboardType.Text
 ) {
     Column(modifier = Modifier.padding(horizontal = 24.dp).fillMaxWidth()) {
         Text(text = label, style = MaterialTheme.typography.bodyLarge, color = TextDark)
@@ -300,6 +257,7 @@ private fun RegisterField(
             onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text(placeholder, color = TextMedium) },
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             isError = error.isNotEmpty(),
             supportingText = if (error.isNotEmpty()) {
                 { Text(error, color = ErrorRed) }

@@ -1,5 +1,6 @@
 package com.docencheck.app.ui.screens
 
+import android.util.Patterns
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -27,10 +28,10 @@ fun LoginScreen(
     onLoginSuccess: (role: String) -> Unit = {},
     onNavigateToRegister: () -> Unit = {}
 ) {
-    var usuario by remember { mutableStateOf("") }
+    var correo by remember { mutableStateOf("") }
     var contrasena by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    var errorUsuario by remember { mutableStateOf("") }
+    var errorCorreo by remember { mutableStateOf("") }
     var errorContrasena by remember { mutableStateOf("") }
     var errorGeneral by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
@@ -41,11 +42,12 @@ fun LoginScreen(
             .background(BackgroundWhite),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Header azul
+        // Header — azul se extiende detrás de la status bar
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(PrimaryDarkBlue)
+                .statusBarsPadding()
                 .padding(vertical = 32.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -68,22 +70,23 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Campo Usuario
+        // Campo Correo Electrónico
         Column(modifier = Modifier.padding(horizontal = 24.dp).fillMaxWidth()) {
             Text(
-                text = "Usuario",
+                text = "Correo Electrónico",
                 style = MaterialTheme.typography.bodyLarge,
                 color = TextDark
             )
             Spacer(modifier = Modifier.height(6.dp))
             OutlinedTextField(
-                value = usuario,
-                onValueChange = { usuario = it; errorUsuario = ""; errorGeneral = "" },
+                value = correo,
+                onValueChange = { correo = it; errorCorreo = ""; errorGeneral = "" },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Correo o ID de usuario", color = TextMedium) },
-                isError = errorUsuario.isNotEmpty(),
-                supportingText = if (errorUsuario.isNotEmpty()) {
-                    { Text(errorUsuario, color = ErrorRed) }
+                placeholder = { Text("ejemplo@correo.com", color = TextMedium) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                isError = errorCorreo.isNotEmpty(),
+                supportingText = if (errorCorreo.isNotEmpty()) {
+                    { Text(errorCorreo, color = ErrorRed) }
                 } else null,
                 shape = RoundedCornerShape(8.dp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -135,7 +138,7 @@ fun LoginScreen(
             )
         }
 
-        // Error general (credenciales inválidas)
+        // Error general
         if (errorGeneral.isNotEmpty()) {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -152,8 +155,8 @@ fun LoginScreen(
         Button(
             onClick = {
                 var valid = true
-                if (usuario.isBlank()) {
-                    errorUsuario = "El campo usuario es requerido"
+                if (correo.isBlank()) {
+                    errorCorreo = "El campo correo es requerido"
                     valid = false
                 }
                 if (contrasena.isBlank()) {
@@ -162,10 +165,21 @@ fun LoginScreen(
                 }
                 if (valid) {
                     isLoading = true
-                    // TODO: llamar a la API de autenticación
-                    // Por ahora simulamos credenciales inválidas para mostrar el mensaje
-                    errorGeneral = "Credenciales inválidas. Verifique su usuario y contraseña."
-                    isLoading = false
+                    // Bypass de pruebas: admin / admin123
+                    if (correo == "admin" && contrasena == "admin123") {
+                        isLoading = false
+                        onLoginSuccess("ADMINISTRADOR")
+                    } else {
+                        // Validar formato de correo
+                        if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
+                            errorCorreo = "Ingrese un correo electrónico válido"
+                            isLoading = false
+                        } else {
+                            // TODO: llamar a la API de autenticación
+                            errorGeneral = "Credenciales inválidas. Verifique su correo y contraseña."
+                            isLoading = false
+                        }
+                    }
                 }
             },
             modifier = Modifier

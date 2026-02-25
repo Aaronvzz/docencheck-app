@@ -3,7 +3,7 @@ package com.docencheck.app.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -24,6 +24,7 @@ fun DocenCheckTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .background(PrimaryDarkBlue)
+            .statusBarsPadding()
             .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
         Row(
@@ -34,7 +35,7 @@ fun DocenCheckTopBar(
             if (onBackClick != null) {
                 IconButton(onClick = onBackClick) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Regresar",
                         tint = BackgroundWhite
                     )
