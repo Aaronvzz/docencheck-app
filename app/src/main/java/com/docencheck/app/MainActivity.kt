@@ -34,7 +34,7 @@ fun DocenCheckApp() {
             LoginScreen(
                 onLoginSuccess = { role ->
                     when (role) {
-                        "ADMINISTRADOR" -> navController.navigate(Routes.GESTION_DOCENTES) {
+                        "ADMINISTRADOR" -> navController.navigate(Routes.ADMIN_HOST) {
                             popUpTo(Routes.LOGIN) { inclusive = true }
                         }
                         "OPERADOR" -> navController.navigate(Routes.REGISTRAR_ASISTENCIA) {
@@ -61,28 +61,18 @@ fun DocenCheckApp() {
             )
         }
 
-        composable(Routes.GESTION_DOCENTES) {
-            GestionDocentesScreen(onBack = { navController.navigateUp() })
-        }
-
-        composable(Routes.ENROLAMIENTO) {
-            EnrolamientoFacialScreen(onBack = { navController.navigateUp() })
+        composable(Routes.ADMIN_HOST) {
+            AdminNavHost(
+                onLogout = {
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
         }
 
         composable(Routes.REGISTRAR_ASISTENCIA) {
             RegistrarAsistenciaScreen(onBack = { navController.navigateUp() })
-        }
-
-        composable(Routes.GESTION_OPERADORES) {
-            GestionOperadoresScreen(onBack = { navController.navigateUp() })
-        }
-
-        composable(Routes.CONSULTA_ASISTENCIAS) {
-            ConsultaAsistenciasScreen(onBack = { navController.navigateUp() })
-        }
-
-        composable(Routes.GENERACION_REPORTES) {
-            GeneracionReportesScreen(onBack = { navController.navigateUp() })
         }
     }
 }

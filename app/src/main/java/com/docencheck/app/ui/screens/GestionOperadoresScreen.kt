@@ -21,7 +21,7 @@ import com.docencheck.app.ui.theme.*
 data class Operador(val id: String, val nombre: String, val usuario: String)
 
 @Composable
-fun GestionOperadoresScreen(onBack: () -> Unit = {}) {
+fun GestionOperadoresScreen(onMenuClick: () -> Unit = {}) {
     val operadores = remember {
         mutableStateListOf(
             Operador("OP01", "Carlos Méndez", "c.mendez"),
@@ -35,7 +35,7 @@ fun GestionOperadoresScreen(onBack: () -> Unit = {}) {
             DocenCheckTopBar(
                 title = "Gestión de Operadores",
                 welcomeText = "Bienvenido, Administrador",
-                onBackClick = onBack
+                onMenuClick = onMenuClick
             )
         },
         floatingActionButton = {

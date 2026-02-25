@@ -17,7 +17,7 @@ import com.docencheck.app.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EnrolamientoFacialScreen(onBack: () -> Unit = {}) {
+fun EnrolamientoFacialScreen(onMenuClick: () -> Unit = {}) {
     var docenteSeleccionado by remember { mutableStateOf("--seleccionar--") }
     var dropdownExpanded by remember { mutableStateOf(false) }
 
@@ -31,7 +31,7 @@ fun EnrolamientoFacialScreen(onBack: () -> Unit = {}) {
             DocenCheckTopBar(
                 title = "Enrolamiento Facial",
                 welcomeText = "Bienvenido, Administrador",
-                onBackClick = onBack
+                onMenuClick = onMenuClick
             )
         }
     ) { padding ->

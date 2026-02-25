@@ -15,7 +15,7 @@ import com.docencheck.app.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GeneracionReportesScreen(onBack: () -> Unit = {}) {
+fun GeneracionReportesScreen(onMenuClick: () -> Unit = {}) {
     var docenteSeleccionado by remember { mutableStateOf("--seleccionar--") }
     var fechaInicio by remember { mutableStateOf("") }
     var fechaFin by remember { mutableStateOf("") }
@@ -30,7 +30,7 @@ fun GeneracionReportesScreen(onBack: () -> Unit = {}) {
             DocenCheckTopBar(
                 title = "Generación de Reportes",
                 welcomeText = "Bienvenido, Administrador",
-                onBackClick = onBack
+                onMenuClick = onMenuClick
             )
         }
     ) { padding ->

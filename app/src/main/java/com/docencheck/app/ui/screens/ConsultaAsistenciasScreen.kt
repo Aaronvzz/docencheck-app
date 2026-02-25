@@ -25,7 +25,7 @@ data class RegistroAsistencia(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConsultaAsistenciasScreen(onBack: () -> Unit = {}) {
+fun ConsultaAsistenciasScreen(onMenuClick: () -> Unit = {}) {
     var docenteFiltro by remember { mutableStateOf("--seleccionar--") }
     var fechaFiltro by remember { mutableStateOf("") }
     var paseFiltro by remember { mutableStateOf("-seleccionar-") }
@@ -46,7 +46,7 @@ fun ConsultaAsistenciasScreen(onBack: () -> Unit = {}) {
             DocenCheckTopBar(
                 title = "Consulta de Asistencias",
                 welcomeText = "Bienvenido, Administrador",
-                onBackClick = onBack
+                onMenuClick = onMenuClick
             )
         }
     ) { padding ->

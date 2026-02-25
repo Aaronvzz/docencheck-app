@@ -24,7 +24,7 @@ data class Docente(
 )
 
 @Composable
-fun GestionDocentesScreen(onBack: () -> Unit = {}) {
+fun GestionDocentesScreen(onMenuClick: () -> Unit = {}) {
     val docentes = remember {
         mutableStateListOf(
             Docente("001", "Giovanni Ramiro Rodríguez Sánchez", true),
@@ -38,7 +38,7 @@ fun GestionDocentesScreen(onBack: () -> Unit = {}) {
             DocenCheckTopBar(
                 title = "Gestión de Docentes",
                 welcomeText = "Bienvenido, Administrador",
-                onBackClick = onBack
+                onMenuClick = onMenuClick
             )
         },
         floatingActionButton = {
